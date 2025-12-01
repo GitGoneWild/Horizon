@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizon_flutter/app/providers/settings_providers.dart';
 import 'package:horizon_flutter/app/theme/horizon_theme.dart';
-import 'package:horizon_flutter/core/models/settings.dart';
+import 'package:horizon_flutter/core/models/settings.dart'
+    as horizon_settings;
 import 'package:horizon_flutter/features/tabs/browser_shell.dart';
 
 void main() {
@@ -42,19 +43,15 @@ class HorizonApp extends ConsumerWidget {
   }
 
   ThemeMode _convertThemeMode(
-    horizon_flutter_core_models_settings.ThemeMode mode,
+    horizon_settings.ThemeMode mode,
   ) {
     switch (mode) {
-      case horizon_flutter_core_models_settings.ThemeMode.light:
+      case horizon_settings.ThemeMode.light:
         return ThemeMode.light;
-      case horizon_flutter_core_models_settings.ThemeMode.dark:
+      case horizon_settings.ThemeMode.dark:
         return ThemeMode.dark;
-      case horizon_flutter_core_models_settings.ThemeMode.system:
+      case horizon_settings.ThemeMode.system:
         return ThemeMode.system;
     }
   }
 }
-
-// Import for ThemeMode enum conflict resolution
-import 'package:horizon_flutter/core/models/settings.dart'
-    as horizon_flutter_core_models_settings;

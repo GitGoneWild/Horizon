@@ -4,6 +4,8 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:horizon_flutter/core/constants/app_constants.dart'
+    as app_constants;
 import 'package:horizon_flutter/core/models/settings.dart';
 
 /// Provider for settings
@@ -87,8 +89,7 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
   }
 
   /// Sets the search engine
-  void setSearchEngine(
-      horizon_flutter_core_constants_app_constants.SearchEngine engine) {
+  void setSearchEngine(app_constants.SearchEngine engine) {
     state = state.copyWith(
       general: state.general.copyWith(searchEngine: engine),
     );
@@ -139,7 +140,3 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
     state = AppSettings.fromJson(json);
   }
 }
-
-// Import for SearchEngine enum reference
-import 'package:horizon_flutter/core/constants/app_constants.dart'
-    as horizon_flutter_core_constants_app_constants;
