@@ -19,6 +19,8 @@ Thank you for your interest in contributing to Horizon Browser! This document pr
 
 The project uses `flutter_inappwebview` which requires NuGet on Windows to download WebView2 dependencies.
 
+> **⚠️ Windows users:** If you encounter build errors mentioning `NUGET-NOTFOUND` or MSB3073, see the [Troubleshooting Guide](TROUBLESHOOTING.md) for solutions.
+
 **Quick Setup (Recommended):**
 
 ```powershell
