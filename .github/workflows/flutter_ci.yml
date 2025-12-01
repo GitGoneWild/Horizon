@@ -13,6 +13,7 @@ on:
       - 'windows/**'
       - 'linux/**'
       - 'macos/**'
+      - '.github/workflows/flutter_ci.yml'
   pull_request:
     branches: [main, develop]
     paths:
@@ -24,6 +25,17 @@ on:
       - 'windows/**'
       - 'linux/**'
       - 'macos/**'
+      - '.github/workflows/flutter_ci.yml'
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least-privilege permissions
+permissions:
+  contents: read
 
 jobs:
   analyze:
@@ -69,7 +81,7 @@ jobs:
         run: flutter test --coverage
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           files: coverage/lcov.info
           fail_ci_if_error: false
