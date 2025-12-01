@@ -63,12 +63,24 @@ class CredentialManager {
    * Gets or generates a master encryption key
    * @private
    * @returns {string} The master key
+   * @note TODO: In production, this should use system keychain via keytar for proper security.
+   *       The current implementation uses machine-derived key which is suitable for development
+   *       but should be replaced with OS keychain integration for production deployment.
    */
   getMasterKey() {
-    // In production, this should use system keychain via keytar
-    // For now, use a derived key from machine-specific data
-    const machineId = process.env.COMPUTERNAME || process.env.HOSTNAME || 'ultrabrowse';
-    return crypto.createHash('sha256').update(machineId + 'ultrabrowse-secure').digest('hex');
+    // Combine multiple machine-specific identifiers for better uniqueness
+    const machineId = [
+      process.env.COMPUTERNAME,
+      process.env.HOSTNAME,
+      process.env.USER,
+      process.env.USERNAME,
+      process.pid.toString()
+    ].filter(Boolean).join('-') || 'ultrabrowse-default';
+
+    // Use a cryptographically secure derivation
+    return crypto.createHash('sha256')
+      .update(machineId + '-ultrabrowse-credential-key-v1')
+      .digest('hex');
   }
 
   /**
@@ -436,11 +448,26 @@ class CredentialManager {
       charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     }
 
-    const bytes = crypto.randomBytes(length);
-    let password = '';
+    // Use rejection sampling to avoid modulo bias
+    // Calculate the maximum value that gives uniform distribution
+    const charsetLen = charset.length;
+    const maxValidValue = 256 - (256 % charsetLen);
 
-    for (let i = 0; i < length; i++) {
-      password += charset[bytes[i] % charset.length];
+    let password = '';
+    let bytesNeeded = length * 2; // Request more bytes to account for rejections
+
+    while (password.length < length) {
+      const bytes = crypto.randomBytes(bytesNeeded);
+
+      for (let i = 0; i < bytes.length && password.length < length; i++) {
+        // Reject values that would cause bias
+        if (bytes[i] < maxValidValue) {
+          password += charset[bytes[i] % charsetLen];
+        }
+      }
+
+      // If we still need more characters, we'll loop again
+      bytesNeeded = (length - password.length) * 2;
     }
 
     return password;

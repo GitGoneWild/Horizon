@@ -108,10 +108,13 @@ async function createMainWindow() {
     }
   });
 
-  // Enable hardware acceleration
-  app.commandLine.appendSwitch('enable-gpu-rasterization');
-  app.commandLine.appendSwitch('enable-zero-copy');
-  app.commandLine.appendSwitch('enable-accelerated-video-decode');
+  // Enable hardware acceleration based on user settings
+  const hwAccelEnabled = settingsManager.get('performance.hardwareAcceleration', true);
+  if (hwAccelEnabled) {
+    app.commandLine.appendSwitch('enable-gpu-rasterization');
+    app.commandLine.appendSwitch('enable-zero-copy');
+    app.commandLine.appendSwitch('enable-accelerated-video-decode');
+  }
 
   // Security: Disable navigation to external protocols
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {

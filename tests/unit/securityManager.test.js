@@ -95,7 +95,13 @@ describe('SecurityManager', () => {
     test('should block JavaScript URLs', () => {
       const result = securityManager.sanitizeUrl('javascript:alert(1)');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('JavaScript URLs are blocked');
+      expect(result.reason).toContain('javascript');
+    });
+
+    test('should block vbscript URLs', () => {
+      const result = securityManager.sanitizeUrl('vbscript:msgbox("test")');
+      expect(result.isValid).toBe(false);
+      expect(result.reason).toContain('vbscript');
     });
 
     test('should return invalid for null/empty input', () => {

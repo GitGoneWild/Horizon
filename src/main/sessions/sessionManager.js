@@ -90,6 +90,11 @@ class SessionManager {
    * @returns {Electron.Session} The session for the profile
    */
   getSessionForProfile(profileId) {
+    // Check if already in active sessions
+    if (this.activeSessions.has(profileId)) {
+      return this.activeSessions.get(profileId);
+    }
+
     let profileSession = this.profileManager.getSessionForProfile(profileId);
 
     if (!profileSession) {
@@ -97,6 +102,9 @@ class SessionManager {
       profileSession = session.fromPartition(partition);
       this.configureSession(profileSession);
     }
+
+    // Store in active sessions for tracking
+    this.activeSessions.set(profileId, profileSession);
 
     return profileSession;
   }

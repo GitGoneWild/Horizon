@@ -26,6 +26,12 @@ const DEFAULT_TAB_CONFIG = {
 };
 
 /**
+ * Browser chrome height in pixels (title bar + tab bar + nav bar)
+ * @constant {number}
+ */
+const TOOLBAR_HEIGHT = 80;
+
+/**
  * Manages browser tabs with webview isolation
  * @class TabManager
  */
@@ -267,14 +273,12 @@ class TabManager {
     }
 
     const bounds = this.parentWindow.getContentBounds();
-    // Account for toolbar height (approximately 80px)
-    const toolbarHeight = 80;
 
     view.setBounds({
       x: 0,
-      y: toolbarHeight,
+      y: TOOLBAR_HEIGHT,
       width: bounds.width,
-      height: bounds.height - toolbarHeight
+      height: bounds.height - TOOLBAR_HEIGHT
     });
   }
 

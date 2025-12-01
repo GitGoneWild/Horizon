@@ -119,6 +119,9 @@ class ExtensionManager {
    * @async
    * @param {string} crxPath - Path to the CRX file
    * @returns {Promise<Object>} Installed extension data
+   * @throws {Error} If extension installation fails security validation
+   * @note TODO: Full CRX signature verification and permission validation is required
+   *       for production deployment. Current implementation is a placeholder.
    */
   async installFromCrx(crxPath) {
     // Validate file exists
@@ -128,6 +131,11 @@ class ExtensionManager {
       throw new Error('CRX file not found');
     }
 
+    // Validate file extension
+    if (!crxPath.endsWith('.crx')) {
+      throw new Error('Invalid extension file format. Only .crx files are supported.');
+    }
+
     // Generate extension ID
     const extensionId = uuidv4();
 
@@ -135,11 +143,16 @@ class ExtensionManager {
     const extensionDir = path.join(this.extensionsPath, extensionId);
     await fs.mkdir(extensionDir, { recursive: true });
 
-    // In a real implementation, we would:
-    // 1. Verify CRX signature
-    // 2. Extract CRX contents
-    // 3. Parse manifest.json
-    // 4. Validate permissions
+    // TODO: Security validation required for production:
+    // 1. Verify CRX signature using public key
+    // 2. Extract and parse CRX contents safely
+    // 3. Parse manifest.json and validate schema
+    // 4. Check for dangerous permissions (e.g., <all_urls>, webRequest, etc.)
+    // 5. Scan for known malicious patterns
+    // 6. Present permission review to user before installation
+    //
+    // For now, this is a placeholder implementation.
+    // Extensions should NOT be installed from untrusted sources.
 
     // For now, create a placeholder manifest
     const manifest = {
@@ -156,7 +169,8 @@ class ExtensionManager {
       path: extensionDir,
       enabled: true,
       isPreinstalled: false,
-      installedAt: new Date().toISOString()
+      installedAt: new Date().toISOString(),
+      securityVerified: false // Flag indicating security verification status
     };
 
     // Save extension metadata

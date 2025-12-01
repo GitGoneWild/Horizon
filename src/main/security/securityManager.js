@@ -188,16 +188,17 @@ class SecurityManager {
     }
 
     const trimmedUrl = url.trim();
+    const lowerUrl = trimmedUrl.toLowerCase();
 
-    // Check for JavaScript URLs (XSS prevention)
-    if (trimmedUrl.toLowerCase().startsWith('javascript:')) {
-      return { isValid: false, sanitizedUrl: null, reason: 'JavaScript URLs are blocked' };
-    }
-
-    // Check for data URLs (except images)
-    if (trimmedUrl.toLowerCase().startsWith('data:')) {
-      if (!trimmedUrl.toLowerCase().startsWith('data:image/')) {
-        return { isValid: false, sanitizedUrl: null, reason: 'Data URLs are restricted' };
+    // Check for dangerous URL schemes (XSS prevention)
+    const dangerousSchemes = ['javascript:', 'vbscript:', 'data:'];
+    for (const scheme of dangerousSchemes) {
+      if (lowerUrl.startsWith(scheme)) {
+        // Allow data URLs only for images
+        if (scheme === 'data:' && lowerUrl.startsWith('data:image/')) {
+          continue;
+        }
+        return { isValid: false, sanitizedUrl: null, reason: `${scheme.slice(0, -1)} URLs are blocked for security` };
       }
     }
 
@@ -303,7 +304,10 @@ class SecurityManager {
     const platform = process.platform === 'darwin' ? 'Macintosh; Intel Mac OS X 10_15_7' :
       process.platform === 'win32' ? 'Windows NT 10.0; Win64; x64' : 'X11; Linux x86_64';
 
-    return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36`;
+    // Use process.versions.chrome when available (in Electron), fallback to generic version
+    const chromeVersion = process.versions?.chrome || '120.0.0.0';
+
+    return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
   }
 
   /**

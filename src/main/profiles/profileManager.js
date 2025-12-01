@@ -12,6 +12,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const { v4: uuidv4 } = require('uuid');
 const Store = require('electron-store');
+const { getSanitizedUserAgent } = require('../utils/userAgent');
 
 /**
  * Default profile configuration
@@ -290,11 +291,7 @@ class ProfileManager {
    * @returns {string} Sanitized user agent
    */
   getSanitizedUserAgent() {
-    // Return a generic user agent to reduce fingerprinting
-    const platform = process.platform === 'darwin' ? 'Macintosh' :
-      process.platform === 'win32' ? 'Windows NT 10.0' : 'X11; Linux x86_64';
-
-    return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36`;
+    return getSanitizedUserAgent();
   }
 
   /**
