@@ -155,6 +155,8 @@ Write-Host "========================================`n" -ForegroundColor Magenta
 Write-Step "Checking Visual Studio installation..."
 $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 if (Test-Path $vsWhere) {
+    # The VC.Tools.x86.x64 component is the core C++ compiler toolset
+    # This component ID is stable across VS 2017/2019/2022 versions
     $vsInstall = & $vsWhere -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property displayName 2>$null
     if ($vsInstall) {
         Write-Success "Visual Studio with C++ tools found: $vsInstall"
