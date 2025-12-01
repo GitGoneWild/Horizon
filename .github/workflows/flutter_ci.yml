@@ -5,15 +5,25 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'horizon_flutter/**'
+      - 'lib/**'
+      - 'test/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'analysis_options.yaml'
+      - 'windows/**'
+      - 'linux/**'
+      - 'macos/**'
   pull_request:
     branches: [main, develop]
     paths:
-      - 'horizon_flutter/**'
-
-defaults:
-  run:
-    working-directory: horizon_flutter
+      - 'lib/**'
+      - 'test/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'analysis_options.yaml'
+      - 'windows/**'
+      - 'linux/**'
+      - 'macos/**'
 
 jobs:
   analyze:
@@ -61,7 +71,7 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
-          files: horizon_flutter/coverage/lcov.info
+          files: coverage/lcov.info
           fail_ci_if_error: false
 
   build-linux:
@@ -93,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-release
-          path: horizon_flutter/build/linux/x64/release/bundle/
+          path: build/linux/x64/release/bundle/
 
   build-windows:
     name: Build Windows
@@ -147,7 +157,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-release
-          path: horizon_flutter/build/windows/x64/runner/Release/
+          path: build/windows/x64/runner/Release/
 
   build-macos:
     name: Build macOS
@@ -173,4 +183,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-release
-          path: horizon_flutter/build/macos/Build/Products/Release/
+          path: build/macos/Build/Products/Release/
