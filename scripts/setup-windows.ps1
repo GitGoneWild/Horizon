@@ -54,7 +54,9 @@ function Test-NuGetInstalled {
 }
 
 function Test-WebView2Installed {
-    # WebView2 Runtime Client GUID (used in registry for version detection)
+    # WebView2 Runtime Client GUID from Microsoft Edge WebView2 documentation
+    # Source: https://docs.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution
+    # This GUID identifies the WebView2 Evergreen Runtime in the Windows registry
     $webView2ClientGuid = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
     
     # Check for WebView2 Runtime installation
@@ -99,13 +101,15 @@ function Install-NuGet {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath -UseBasicParsing
         
-        # Verify the file was downloaded and is a valid PE executable
+        # Verify the file was downloaded and is a valid executable
+        # NuGet.exe is typically 6-7MB; 1KB minimum detects empty files or error pages
         if (-not (Test-Path $nugetPath)) {
             throw "NuGet download failed - file not found"
         }
         $fileInfo = Get-Item $nugetPath
-        if ($fileInfo.Length -lt 1000) {
-            throw "NuGet download appears incomplete (file too small)"
+        $minFileSizeBytes = 1024  # 1 KB minimum to catch download failures
+        if ($fileInfo.Length -lt $minFileSizeBytes) {
+            throw "NuGet download appears incomplete (file size: $($fileInfo.Length) bytes, expected at least $minFileSizeBytes bytes)"
         }
     } catch {
         Write-ErrorMessage "Failed to download NuGet: $_"
@@ -114,9 +118,9 @@ function Install-NuGet {
     
     # Add to PATH using exact matching on semicolon-separated entries
     $currentPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
-    $pathEntries = $currentPath -split ';' | Where-Object { $_.Trim() -ne '' }
+    $pathEntries = ($currentPath -split ';' | Where-Object { $_.Trim() -ne '' }) | ForEach-Object { $_.TrimEnd('\') }
     $installDirNormalized = $installDir.TrimEnd('\')
-    $alreadyInPath = $pathEntries | ForEach-Object { $_.TrimEnd('\') } | Where-Object { $_ -eq $installDirNormalized }
+    $alreadyInPath = $pathEntries -contains $installDirNormalized
     
     if (-not $alreadyInPath) {
         Write-Host "Adding NuGet to user PATH..."

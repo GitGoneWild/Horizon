@@ -122,10 +122,12 @@ jobs:
           $nugetPath = "$toolsDir\nuget.exe"
           Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath -UseBasicParsing
           
-          # Verify the download is a valid executable (basic integrity check)
+          # Verify the download is a valid executable
+          # NuGet.exe is typically 6-7MB; 1KB minimum detects empty files or error pages
           $fileInfo = Get-Item $nugetPath
-          if ($fileInfo.Length -lt 1000) {
-            throw "NuGet download appears incomplete"
+          $minFileSizeBytes = 1024  # 1 KB minimum
+          if ($fileInfo.Length -lt $minFileSizeBytes) {
+            throw "NuGet download appears incomplete (size: $($fileInfo.Length) bytes)"
           }
           
           # Add to PATH for this session
