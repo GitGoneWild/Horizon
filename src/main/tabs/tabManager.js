@@ -1,5 +1,5 @@
 /**
- * @file Tab Manager for UltraBrowse browser
+ * @file Tab Manager for Horizon browser
  * @description Handles tab creation, navigation, and lifecycle management
  * @module tabs/tabManager
  */
@@ -15,7 +15,7 @@ const path = require('path');
  * @constant {Object}
  */
 const DEFAULT_TAB_CONFIG = {
-  url: 'ultrabrowse://newtab',
+  url: 'horizon://newtab',
   title: 'New Tab',
   isActive: false,
   isLoading: false,
@@ -86,13 +86,13 @@ class TabManager {
   /**
    * Creates a new tab
    * @param {Object} options - Tab creation options
-   * @param {string} [options.url='ultrabrowse://newtab'] - Initial URL
+   * @param {string} [options.url='horizon://newtab'] - Initial URL
    * @param {string} [options.profileId='default'] - Profile ID for session
    * @param {boolean} [options.isIncognito=false] - Whether tab is incognito
    * @param {boolean} [options.activate=true] - Whether to activate the tab
    * @returns {Object} The created tab data
    */
-  createTab({ url = 'ultrabrowse://newtab', profileId = 'default', isIncognito = false, activate = true } = {}) {
+  createTab({ url = 'horizon://newtab', profileId = 'default', isIncognito = false, activate = true } = {}) {
     const tabId = uuidv4();
 
     // Get appropriate session
@@ -142,7 +142,7 @@ class TabManager {
     // Navigate to URL
     view.webContents.loadURL(url).catch(() => {
       // Handle load errors gracefully
-      view.webContents.loadURL('ultrabrowse://error');
+      view.webContents.loadURL('horizon://error');
     });
 
     // Activate if requested
@@ -156,10 +156,10 @@ class TabManager {
 
   /**
    * Creates a new incognito tab
-   * @param {string} [url='ultrabrowse://newtab'] - Initial URL
+   * @param {string} [url='horizon://newtab'] - Initial URL
    * @returns {Object} The created incognito tab data
    */
-  createIncognitoTab(url = 'ultrabrowse://newtab') {
+  createIncognitoTab(url = 'horizon://newtab') {
     return this.createTab({ url, isIncognito: true, activate: true });
   }
 
@@ -390,6 +390,17 @@ class TabManager {
   }
 
   /**
+   * Gets the BrowserView for the currently active tab
+   * @returns {BrowserView|null} The active view or null
+   */
+  getActiveView() {
+    if (!this.activeTabId) {
+      return null;
+    }
+    return this.views.get(this.activeTabId) || null;
+  }
+
+  /**
    * Navigates the active tab to a URL
    * @param {string} url - The URL to navigate to
    * @returns {boolean} True if successful
@@ -406,7 +417,7 @@ class TabManager {
 
     // Validate and normalize URL
     let normalizedUrl = url;
-    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('ultrabrowse://')) {
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('horizon://')) {
       // Check if it's a valid domain
       if (url.includes('.') && !url.includes(' ')) {
         normalizedUrl = `https://${url}`;

@@ -218,7 +218,7 @@ describe('SettingsManager', () => {
   describe('DEFAULT_SETTINGS', () => {
     test('should have general settings', () => {
       expect(DEFAULT_SETTINGS.general).toBeDefined();
-      expect(DEFAULT_SETTINGS.general.homepage).toBe('ultrabrowse://newtab');
+      expect(DEFAULT_SETTINGS.general.homepage).toBe('horizon://newtab');
       expect(DEFAULT_SETTINGS.general.searchEngine).toBe('duckduckgo');
     });
 

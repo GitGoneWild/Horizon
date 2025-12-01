@@ -1,5 +1,5 @@
 /**
- * @file Security Manager for UltraBrowse browser
+ * @file Security Manager for Horizon browser
  * @description Handles security policies, URL validation, and protection mechanisms
  * @module security/securityManager
  */
@@ -98,7 +98,7 @@ class SecurityManager {
       const url = details.url;
 
       // Allow internal URLs
-      if (url.startsWith('ultrabrowse://') || url.startsWith('devtools://')) {
+      if (url.startsWith('horizon://') || url.startsWith('devtools://')) {
         callback({ cancel: false });
         return;
       }
@@ -127,7 +127,7 @@ class SecurityManager {
       const parsedUrl = new URL(url);
 
       // Allow internal URLs
-      if (parsedUrl.protocol === 'ultrabrowse:') {
+      if (parsedUrl.protocol === 'horizon:') {
         return true;
       }
 

@@ -1,6 +1,6 @@
 /**
- * UltraBrowse - Main Stylesheet
- * A modern, clean design for the browser chrome
+ * Horizon Browser - Main Stylesheet
+ * A futuristic, cosmic design for the browser chrome
  */
 
 /* ===== CSS Variables (Theme) ===== */
@@ -17,17 +17,25 @@
   --text-tertiary: #80868b;
   
   --border-color: #dadce0;
-  --border-focus: #1a73e8;
+  --border-focus: #6366f1;
   
-  --accent-primary: #1a73e8;
-  --accent-secondary: #174ea6;
-  --accent-success: #1e8e3e;
-  --accent-warning: #f9ab00;
-  --accent-danger: #d93025;
+  /* Horizon accent colors - cosmic purple/indigo */
+  --accent-primary: #6366f1;
+  --accent-secondary: #4f46e5;
+  --accent-tertiary: #8b5cf6;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  
+  /* Cosmic gradient colors */
+  --cosmic-start: #6366f1;
+  --cosmic-mid: #8b5cf6;
+  --cosmic-end: #a855f7;
   
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
   
   /* Dimensions */
   --title-bar-height: 32px;
@@ -60,41 +68,60 @@
 /* Dark Theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #202124;
-    --bg-secondary: #292a2d;
-    --bg-tertiary: #35363a;
-    --bg-hover: #3c4043;
-    --bg-active: #4e5256;
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a2e;
+    --bg-tertiary: #252542;
+    --bg-hover: #2d2d4a;
+    --bg-active: #3a3a5a;
     
     --text-primary: #e8eaed;
     --text-secondary: #9aa0a6;
     --text-tertiary: #80868b;
     
     --border-color: #3c4043;
-    --border-focus: #8ab4f8;
+    --border-focus: #8b5cf6;
     
-    --accent-primary: #8ab4f8;
-    --accent-secondary: #669df6;
+    --accent-primary: #8b5cf6;
+    --accent-secondary: #a855f7;
   }
 }
 
 /* Force dark theme class */
 .theme-dark {
-  --bg-primary: #202124;
-  --bg-secondary: #292a2d;
-  --bg-tertiary: #35363a;
-  --bg-hover: #3c4043;
-  --bg-active: #4e5256;
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #252542;
+  --bg-hover: #2d2d4a;
+  --bg-active: #3a3a5a;
   
   --text-primary: #e8eaed;
   --text-secondary: #9aa0a6;
   --text-tertiary: #80868b;
   
   --border-color: #3c4043;
-  --border-focus: #8ab4f8;
+  --border-focus: #8b5cf6;
   
-  --accent-primary: #8ab4f8;
-  --accent-secondary: #669df6;
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #a855f7;
+}
+
+/* Force light theme class */
+.theme-light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --bg-hover: #e0e0e0;
+  --bg-active: #d0d0d0;
+  
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-tertiary: #80868b;
+  
+  --border-color: #dadce0;
+  --border-focus: #6366f1;
+  
+  --accent-primary: #6366f1;
+  --accent-secondary: #4f46e5;
 }
 
 /* ===== Base Reset ===== */
@@ -476,7 +503,7 @@ a {
 .loading-progress {
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(90deg, var(--cosmic-start), var(--cosmic-mid), var(--cosmic-end));
   transition: width 200ms ease;
   animation: loading 2s ease-in-out infinite;
 }
@@ -503,7 +530,7 @@ a {
   align-items: center;
   justify-content: center;
   height: 100%;
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 50%, var(--bg-secondary) 100%);
 }
 
 .new-tab-content {
@@ -513,9 +540,12 @@ a {
 }
 
 .logo h1 {
-  font-size: 42px;
-  font-weight: 300;
-  color: var(--text-primary);
+  font-size: 48px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--cosmic-start), var(--cosmic-mid), var(--cosmic-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 8px;
 }
 
@@ -701,19 +731,29 @@ a {
 
 /* ===== Incognito Mode ===== */
 .incognito-mode #nav-bar {
-  background: #2d3134;
+  background: #1a1a2e;
 }
 
 .incognito-mode #url-bar-container {
-  background: #363b3e;
+  background: #252542;
 }
 
 .incognito-mode #url-bar-container:hover {
-  background: #404448;
+  background: #2d2d4a;
 }
 
 .incognito-mode #tab-bar {
-  background: #25282b;
+  background: #0f0f23;
+}
+
+/* ===== Cosmic Animation Effects ===== */
+@keyframes cosmic-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+}
+
+.cosmic-glow {
+  animation: cosmic-glow 3s ease-in-out infinite;
 }
 
 /* ===== Accessibility ===== */

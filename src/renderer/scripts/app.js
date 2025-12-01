@@ -1,13 +1,13 @@
 /**
- * @file Main application script for UltraBrowse renderer
+ * @file Main application script for Horizon renderer
  * @description Handles UI interactions and communication with main process
  */
 
 'use strict';
 
-// Ensure ultraBrowse API is available
-if (typeof window.ultraBrowse === 'undefined') {
-  console.error('UltraBrowse API not available. Running in development mode.');
+// Ensure horizon API is available
+if (typeof window.horizon === 'undefined') {
+  console.error('Horizon API not available. Running in development mode.');
 }
 
 /**
@@ -171,7 +171,7 @@ const TabManager = {
     }
 
     // Update document title
-    document.title = tab.title ? `${tab.title} - UltraBrowse` : 'UltraBrowse';
+    document.title = tab.title ? `${tab.title} - Horizon` : 'Horizon';
   },
 
   /**
@@ -189,9 +189,9 @@ const TabManager = {
       if (urlObj.protocol === 'https:') {
         elements.securityIndicator.className = 'security-indicator security-secure';
         elements.securityIndicator.title = 'Connection is secure';
-      } else if (urlObj.protocol === 'ultrabrowse:') {
+      } else if (urlObj.protocol === 'horizon:') {
         elements.securityIndicator.className = 'security-indicator security-secure';
-        elements.securityIndicator.title = 'UltraBrowse page';
+        elements.securityIndicator.title = 'Horizon page';
       } else {
         elements.securityIndicator.className = 'security-indicator security-insecure';
         elements.securityIndicator.title = 'Connection is not secure';
@@ -206,11 +206,11 @@ const TabManager = {
    * @param {Object} options - Tab options
    */
   async createTab(options = {}) {
-    if (!window.ultraBrowse) {
+    if (!window.horizon) {
       // Development mode - create mock tab
       const tab = {
         id: `tab-${Date.now()}`,
-        url: options.url || 'ultrabrowse://newtab',
+        url: options.url || 'horizon://newtab',
         title: 'New Tab',
         isActive: true,
         isLoading: false,
@@ -230,7 +230,7 @@ const TabManager = {
     }
 
     try {
-      const tab = await window.ultraBrowse.tabs.create(options);
+      const tab = await window.horizon.tabs.create(options);
       if (tab) {
         // Deactivate other tabs
         state.tabs.forEach(t => t.isActive = false);
@@ -250,7 +250,7 @@ const TabManager = {
    * @param {string} tabId - Tab ID to close
    */
   async closeTab(tabId) {
-    if (!window.ultraBrowse) {
+    if (!window.horizon) {
       state.tabs = state.tabs.filter(t => t.id !== tabId);
       if (state.tabs.length === 0) {
         this.createTab();
@@ -265,13 +265,13 @@ const TabManager = {
     }
 
     try {
-      await window.ultraBrowse.tabs.close(tabId);
+      await window.horizon.tabs.close(tabId);
       state.tabs = state.tabs.filter(t => t.id !== tabId);
 
       if (state.tabs.length === 0) {
         await this.createTab();
       } else {
-        const tabs = await window.ultraBrowse.tabs.getAll();
+        const tabs = await window.horizon.tabs.getAll();
         state.tabs = tabs;
         const activeTab = tabs.find(t => t.isActive);
         if (activeTab) {
@@ -291,7 +291,7 @@ const TabManager = {
    * @param {string} tabId - Tab ID to activate
    */
   async activateTab(tabId) {
-    if (!window.ultraBrowse) {
+    if (!window.horizon) {
       state.tabs.forEach(t => t.isActive = t.id === tabId);
       state.activeTabId = tabId;
       const activeTab = state.tabs.find(t => t.id === tabId);
@@ -301,7 +301,7 @@ const TabManager = {
     }
 
     try {
-      await window.ultraBrowse.tabs.activate(tabId);
+      await window.horizon.tabs.activate(tabId);
       state.tabs.forEach(t => t.isActive = t.id === tabId);
       state.activeTabId = tabId;
 
@@ -322,7 +322,7 @@ const TabManager = {
       return;
     }
 
-    if (!window.ultraBrowse) {
+    if (!window.horizon) {
       const activeTab = state.tabs.find(t => t.id === state.activeTabId);
       if (activeTab) {
         activeTab.url = url;
@@ -342,7 +342,7 @@ const TabManager = {
     }
 
     try {
-      await window.ultraBrowse.tabs.navigate(url);
+      await window.horizon.tabs.navigate(url);
     } catch (err) {
       console.error('Failed to navigate:', err);
     }
@@ -352,8 +352,8 @@ const TabManager = {
    * Goes back in history
    */
   async goBack() {
-    if (window.ultraBrowse) {
-      await window.ultraBrowse.tabs.goBack();
+    if (window.horizon) {
+      await window.horizon.tabs.goBack();
     }
   },
 
@@ -361,8 +361,8 @@ const TabManager = {
    * Goes forward in history
    */
   async goForward() {
-    if (window.ultraBrowse) {
-      await window.ultraBrowse.tabs.goForward();
+    if (window.horizon) {
+      await window.horizon.tabs.goForward();
     }
   },
 
@@ -370,8 +370,8 @@ const TabManager = {
    * Refreshes the current page
    */
   async refresh() {
-    if (window.ultraBrowse) {
-      await window.ultraBrowse.tabs.refresh();
+    if (window.horizon) {
+      await window.horizon.tabs.refresh();
     }
   }
 };
@@ -414,7 +414,7 @@ function setupEventHandlers() {
   elements.btnBack?.addEventListener('click', () => TabManager.goBack());
   elements.btnForward?.addEventListener('click', () => TabManager.goForward());
   elements.btnRefresh?.addEventListener('click', () => TabManager.refresh());
-  elements.btnHome?.addEventListener('click', () => TabManager.navigate('ultrabrowse://newtab'));
+  elements.btnHome?.addEventListener('click', () => TabManager.navigate('horizon://newtab'));
 
   // URL bar
   elements.urlInput?.addEventListener('keydown', (e) => {
@@ -438,17 +438,17 @@ function setupEventHandlers() {
   });
 
   // Window controls
-  if (window.ultraBrowse) {
+  if (window.horizon) {
     elements.btnMinimize?.addEventListener('click', () => {
-      window.ultraBrowse.window.minimize();
+      window.horizon.window.minimize();
     });
 
     elements.btnMaximize?.addEventListener('click', () => {
-      window.ultraBrowse.window.toggleMaximize();
+      window.horizon.window.toggleMaximize();
     });
 
     elements.btnClose?.addEventListener('click', () => {
-      window.ultraBrowse.window.close();
+      window.horizon.window.close();
     });
   }
 
@@ -480,7 +480,7 @@ function setupEventHandlers() {
   });
 
   document.getElementById('menu-settings')?.addEventListener('click', () => {
-    TabManager.createTab({ url: 'ultrabrowse://settings' });
+    TabManager.createTab({ url: 'horizon://settings' });
     MenuManager.closeAllMenus();
   });
 
@@ -546,15 +546,15 @@ function setupEventHandlers() {
  * Initialize application
  */
 async function init() {
-  console.log('UltraBrowse initializing...');
+  console.log('Horizon initializing...');
 
   // Setup event handlers
   setupEventHandlers();
 
   // Create initial tab
-  if (window.ultraBrowse) {
+  if (window.horizon) {
     try {
-      const tabs = await window.ultraBrowse.tabs.getAll();
+      const tabs = await window.horizon.tabs.getAll();
       state.tabs = tabs;
 
       const activeTab = tabs.find(t => t.isActive);
@@ -566,7 +566,7 @@ async function init() {
       TabManager.renderTabs();
 
       // Subscribe to tab updates
-      window.ultraBrowse.tabs.onUpdate((data) => {
+      window.horizon.tabs.onUpdate((data) => {
         TabManager.updateTab(data);
       });
     } catch (err) {
@@ -578,7 +578,7 @@ async function init() {
     TabManager.createTab();
   }
 
-  console.log('UltraBrowse initialized successfully');
+  console.log('Horizon initialized successfully');
 }
 
 // Initialize when DOM is ready

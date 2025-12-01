@@ -1,5 +1,5 @@
 /**
- * @file Application Menu for UltraBrowse browser
+ * @file Application Menu for Horizon browser
  * @description Creates the application menu bar with all browser options
  * @module menu/applicationMenu
  */
@@ -32,7 +32,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: 'Cmd+,',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://settings' });
+              tabManager.createTab({ url: 'horizon://settings' });
             }
           }
         },
@@ -241,7 +241,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: 'CmdOrCtrl+Shift+H',
           click: () => {
             if (tabManager && settingsManager) {
-              const homepage = settingsManager.get('general.homepage', 'ultrabrowse://newtab');
+              const homepage = settingsManager.get('general.homepage', 'horizon://newtab');
               tabManager.navigate(homepage);
             }
           }
@@ -252,7 +252,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: 'CmdOrCtrl+H',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://history' });
+              tabManager.createTab({ url: 'horizon://history' });
             }
           }
         },
@@ -260,7 +260,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           label: 'Clear Browsing Data...',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://settings/privacy' });
+              tabManager.createTab({ url: 'horizon://settings/privacy' });
             }
           }
         }
@@ -283,7 +283,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: 'CmdOrCtrl+Shift+B',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://bookmarks' });
+              tabManager.createTab({ url: 'horizon://bookmarks' });
             }
           }
         },
@@ -311,7 +311,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           label: 'Manage Profiles',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://settings/profiles' });
+              tabManager.createTab({ url: 'horizon://settings/profiles' });
             }
           }
         },
@@ -353,7 +353,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           label: 'Extensions',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://extensions' });
+              tabManager.createTab({ url: 'horizon://extensions' });
             }
           }
         },
@@ -363,7 +363,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: 'CmdOrCtrl+J',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://downloads' });
+              tabManager.createTab({ url: 'horizon://downloads' });
             }
           }
         },
@@ -371,7 +371,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           label: 'Password Manager',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://passwords' });
+              tabManager.createTab({ url: 'horizon://passwords' });
             }
           }
         },
@@ -381,7 +381,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           accelerator: isMac ? '' : 'CmdOrCtrl+,',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://settings' });
+              tabManager.createTab({ url: 'horizon://settings' });
             }
           }
         }
@@ -410,10 +410,10 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
       label: 'Help',
       submenu: [
         {
-          label: 'UltraBrowse Help',
+          label: 'Horizon Help',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://help' });
+              tabManager.createTab({ url: 'horizon://help' });
             }
           }
         },
@@ -421,7 +421,7 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
           label: 'Keyboard Shortcuts',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://shortcuts' });
+              tabManager.createTab({ url: 'horizon://shortcuts' });
             }
           }
         },
@@ -434,10 +434,10 @@ function createApplicationMenu({ tabManager, profileManager, settingsManager, ma
         },
         { type: 'separator' },
         {
-          label: 'About UltraBrowse',
+          label: 'About Horizon',
           click: () => {
             if (tabManager) {
-              tabManager.createTab({ url: 'ultrabrowse://about' });
+              tabManager.createTab({ url: 'horizon://about' });
             }
           }
         }

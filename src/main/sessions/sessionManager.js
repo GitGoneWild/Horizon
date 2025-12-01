@@ -1,5 +1,5 @@
 /**
- * @file Session Manager for UltraBrowse browser
+ * @file Session Manager for Horizon browser
  * @description Handles Electron session creation and management with profile isolation
  * @module sessions/sessionManager
  */
@@ -47,7 +47,7 @@ class SessionManager {
   async configureSession(browserSession) {
     // Enable Do Not Track
     browserSession.setUserAgent(
-      browserSession.getUserAgent() + ' UltraBrowse/1.0'
+      browserSession.getUserAgent() + ' Horizon/1.0'
     );
 
     // Block third-party cookies

@@ -1,5 +1,5 @@
 /**
- * @file Settings Manager for UltraBrowse browser
+ * @file Settings Manager for Horizon browser
  * @description Handles persistent storage and management of user preferences
  * @module settings/settingsManager
  */
@@ -15,7 +15,7 @@ const Store = require('electron-store');
 const DEFAULT_SETTINGS = {
   // General settings
   general: {
-    homepage: 'ultrabrowse://newtab',
+    homepage: 'horizon://newtab',
     searchEngine: 'duckduckgo',
     searchEngineUrl: 'https://duckduckgo.com/?q=',
     startupBehavior: 'lastSession', // 'homepage', 'lastSession', 'blank'

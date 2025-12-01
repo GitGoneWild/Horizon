@@ -1,8 +1,8 @@
 {
-  "name": "ultrabrowse",
-  "productName": "UltraBrowse",
-  "version": "1.0.0",
-  "description": "A fast, secure, and privacy-focused web browser built with Electron",
+  "name": "horizon-browser",
+  "productName": "Horizon",
+  "version": "0.1.0",
+  "description": "A futuristic, secure, and privacy-focused web browser built with Electron - Fast. Secure. Private. 🚀",
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
@@ -28,7 +28,7 @@
     "privacy",
     "fast"
   ],
-  "author": "UltraBrowse Team",
+  "author": "Horizon Team",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -49,8 +49,8 @@
     "uuid": "^9.0.1"
   },
   "build": {
-    "appId": "com.ultrabrowse.browser",
-    "productName": "UltraBrowse",
+    "appId": "com.horizon.browser",
+    "productName": "Horizon",
     "directories": {
       "output": "dist",
       "buildResources": "build"

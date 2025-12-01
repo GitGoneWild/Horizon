@@ -1,5 +1,5 @@
 /**
- * @file User Agent utility for UltraBrowse browser
+ * @file User Agent utility for Horizon browser
  * @description Provides a consistent, sanitized user agent string across the application
  * @module utils/userAgent
  */

@@ -8,7 +8,7 @@
 // Mock electron modules
 jest.mock('electron', () => ({
   app: {
-    getPath: jest.fn(() => '/tmp/ultrabrowse-test')
+    getPath: jest.fn(() => '/tmp/horizon-test')
   },
   session: {
     fromPartition: jest.fn(() => ({
