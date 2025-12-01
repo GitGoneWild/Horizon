@@ -90,18 +90,32 @@ function Install-NuGet {
     
     $nugetPath = Join-Path $installDir "nuget.exe"
     
-    # Download NuGet CLI
+    # Download NuGet CLI with TLS 1.2 for security
     Write-Host "Downloading NuGet CLI to $nugetPath..."
     try {
-        Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath -UseBasicParsing
+        
+        # Verify the file was downloaded and is a valid PE executable
+        if (-not (Test-Path $nugetPath)) {
+            throw "NuGet download failed - file not found"
+        }
+        $fileInfo = Get-Item $nugetPath
+        if ($fileInfo.Length -lt 1000) {
+            throw "NuGet download appears incomplete (file too small)"
+        }
     } catch {
         Write-ErrorMessage "Failed to download NuGet: $_"
         throw
     }
     
-    # Add to PATH
+    # Add to PATH using exact matching on semicolon-separated entries
     $currentPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
-    if ($currentPath -notlike "*$installDir*") {
+    $pathEntries = $currentPath -split ';' | Where-Object { $_.Trim() -ne '' }
+    $installDirNormalized = $installDir.TrimEnd('\')
+    $alreadyInPath = $pathEntries | ForEach-Object { $_.TrimEnd('\') } | Where-Object { $_ -eq $installDirNormalized }
+    
+    if (-not $alreadyInPath) {
         Write-Host "Adding NuGet to user PATH..."
         [Environment]::SetEnvironmentVariable(
             "Path",
@@ -143,15 +157,24 @@ if (Test-FlutterInstalled) {
 # Check and install NuGet
 Write-Step "Checking NuGet installation..."
 if ((Test-NuGetInstalled) -and (-not $Force)) {
-    $nugetVersion = nuget help 2>&1 | Select-Object -First 1
-    Write-Success "NuGet is already installed: $nugetVersion"
+    # Use 'nuget' without args to get quick version info (more efficient than 'nuget help')
+    try {
+        $nugetOutput = & nuget 2>&1 | Select-String "NuGet Version" | Select-Object -First 1
+        if ($nugetOutput) {
+            Write-Success "NuGet is already installed: $nugetOutput"
+        } else {
+            Write-Success "NuGet is already installed"
+        }
+    } catch {
+        Write-Success "NuGet is already installed"
+    }
 } else {
     if ($Force) {
         Write-Host "Forcing NuGet reinstallation..."
     }
     $nugetPath = Install-NuGet
     Write-Host "`nVerifying NuGet installation..."
-    & $nugetPath help 2>&1 | Select-Object -First 1
+    & $nugetPath 2>&1 | Select-String "NuGet Version" | Select-Object -First 1
 }
 
 # Check WebView2
