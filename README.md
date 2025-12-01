@@ -130,8 +130,9 @@ $env:Path += ";$env:LOCALAPPDATA\NuGet"
 ### Getting Started
 
 ```bash
-# Navigate to the Flutter project
-cd horizon_flutter
+# Clone the repository
+git clone https://github.com/GitGoneWild/Horizon.git
+cd Horizon
 
 # Install dependencies
 flutter pub get
@@ -164,7 +165,7 @@ Build artifacts will be in `build/<platform>/`.
 ### 📁 Project Structure
 
 ```
-horizon_flutter/
+Horizon/
 ├── lib/
 │   ├── app/                    # App root, routing, DI, themes
 │   │   ├── providers/          # Riverpod providers

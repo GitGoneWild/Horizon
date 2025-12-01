@@ -47,7 +47,7 @@ nuget help
 ```bash
 # Clone the repository
 git clone https://github.com/GitGoneWild/Horizon.git
-cd Horizon/horizon_flutter
+cd Horizon
 
 # Install dependencies
 flutter pub get
