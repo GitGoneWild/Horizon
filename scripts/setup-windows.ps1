@@ -54,9 +54,12 @@ function Test-NuGetInstalled {
 }
 
 function Test-WebView2Installed {
+    # WebView2 Runtime Client GUID (used in registry for version detection)
+    $webView2ClientGuid = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+    
     # Check for WebView2 Runtime installation
-    $webView2Key = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-    $webView2KeyAlt = "HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+    $webView2Key = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\$webView2ClientGuid"
+    $webView2KeyAlt = "HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\$webView2ClientGuid"
     
     if ((Test-Path $webView2Key) -or (Test-Path $webView2KeyAlt)) {
         return $true
@@ -157,13 +160,13 @@ if (Test-FlutterInstalled) {
 # Check and install NuGet
 Write-Step "Checking NuGet installation..."
 if ((Test-NuGetInstalled) -and (-not $Force)) {
-    # Use 'nuget' without args to get quick version info (more efficient than 'nuget help')
+    # Verify NuGet works by checking its exit code (most efficient method)
     try {
-        $nugetOutput = & nuget 2>&1 | Select-String "NuGet Version" | Select-Object -First 1
-        if ($nugetOutput) {
-            Write-Success "NuGet is already installed: $nugetOutput"
+        $null = & nuget help 2>&1
+        if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq $null) {
+            Write-Success "NuGet is already installed and functional"
         } else {
-            Write-Success "NuGet is already installed"
+            Write-Warning "NuGet is installed but may not be working properly"
         }
     } catch {
         Write-Success "NuGet is already installed"
@@ -174,7 +177,14 @@ if ((Test-NuGetInstalled) -and (-not $Force)) {
     }
     $nugetPath = Install-NuGet
     Write-Host "`nVerifying NuGet installation..."
-    & $nugetPath 2>&1 | Select-String "NuGet Version" | Select-Object -First 1
+    try {
+        $null = & $nugetPath help 2>&1
+        if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq $null) {
+            Write-Success "NuGet installed and verified successfully"
+        }
+    } catch {
+        Write-Warning "NuGet installed but verification had issues"
+    }
 }
 
 # Check WebView2

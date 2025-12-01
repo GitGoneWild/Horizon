@@ -111,9 +111,15 @@ jobs:
 
       - name: Install NuGet
         run: |
+          # Create dedicated tools directory for NuGet
+          $toolsDir = "$env:USERPROFILE\.nuget"
+          if (-not (Test-Path $toolsDir)) {
+            New-Item -ItemType Directory -Path $toolsDir -Force | Out-Null
+          }
+          
           # Download NuGet CLI with TLS 1.2 enforcement
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $nugetPath = "$env:USERPROFILE\nuget.exe"
+          $nugetPath = "$toolsDir\nuget.exe"
           Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath -UseBasicParsing
           
           # Verify the download is a valid executable (basic integrity check)
@@ -123,10 +129,10 @@ jobs:
           }
           
           # Add to PATH for this session
-          echo "$env:USERPROFILE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo $toolsDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           
           # Verify installation
-          & $nugetPath 2>&1 | Select-String "NuGet Version" | Select-Object -First 1
+          & $nugetPath help | Select-Object -First 3
         shell: pwsh
 
       - name: Get dependencies
