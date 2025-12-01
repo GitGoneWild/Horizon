@@ -78,12 +78,12 @@ abstract final class HorizonTheme {
           foregroundColor: HorizonColors.lightTextPrimary,
           elevation: 0,
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           color: HorizonColors.lightBgSecondary,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: HorizonColors.lightBorder),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            side: BorderSide(color: HorizonColors.lightBorder),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -204,12 +204,12 @@ abstract final class HorizonTheme {
           foregroundColor: HorizonColors.darkTextPrimary,
           elevation: 0,
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           color: HorizonColors.darkBgSecondary,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: HorizonColors.darkBorder),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            side: BorderSide(color: HorizonColors.darkBorder),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
