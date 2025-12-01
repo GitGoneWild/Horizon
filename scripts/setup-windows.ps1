@@ -163,7 +163,7 @@ if ((Test-NuGetInstalled) -and (-not $Force)) {
     # Verify NuGet works by checking its exit code (most efficient method)
     try {
         $null = & nuget help 2>&1
-        if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq $null) {
+        if ($LASTEXITCODE -eq 0) {
             Write-Success "NuGet is already installed and functional"
         } else {
             Write-Warning "NuGet is installed but may not be working properly"
@@ -179,7 +179,7 @@ if ((Test-NuGetInstalled) -and (-not $Force)) {
     Write-Host "`nVerifying NuGet installation..."
     try {
         $null = & $nugetPath help 2>&1
-        if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq $null) {
+        if ($LASTEXITCODE -eq 0) {
             Write-Success "NuGet installed and verified successfully"
         }
     } catch {
