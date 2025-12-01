@@ -215,30 +215,33 @@ class _UrlBar extends StatelessWidget {
 
     return Focus(
       onFocusChange: onFocusChanged,
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          prefixIcon: _SecurityIndicator(state: securityState),
-          hintText: 'Search or enter URL',
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.arrow_forward, size: 18),
-            onPressed: () => onSubmitted(controller.text),
-            tooltip: 'Go',
+      child: Material(
+        type: MaterialType.transparency,
+        child: TextField(
+          controller: controller,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            prefixIcon: _SecurityIndicator(state: securityState),
+            hintText: 'Search or enter URL',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.arrow_forward, size: 18),
+              onPressed: () => onSubmitted(controller.text),
+              tooltip: 'Go',
+            ),
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8),
           ),
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+          style: Theme.of(context).textTheme.bodyMedium,
+          textInputAction: TextInputAction.go,
+          onSubmitted: onSubmitted,
+          onTap: () {
+            // Select all text when tapped
+            controller.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: controller.text.length,
+            );
+          },
         ),
-        style: Theme.of(context).textTheme.bodyMedium,
-        textInputAction: TextInputAction.go,
-        onSubmitted: onSubmitted,
-        onTap: () {
-          // Select all text when tapped
-          controller.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: controller.text.length,
-          );
-        },
       ),
     );
   }
