@@ -109,6 +109,16 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Install NuGet
+        run: |
+          # Download NuGet CLI
+          Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "$env:USERPROFILE\nuget.exe"
+          # Add to PATH for this session
+          echo "$env:USERPROFILE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          # Verify installation
+          & "$env:USERPROFILE\nuget.exe" help | Select-Object -First 1
+        shell: pwsh
+
       - name: Get dependencies
         run: flutter pub get
 
