@@ -394,7 +394,10 @@ class TabManager {
    * @returns {BrowserView|null} The active view or null
    */
   getActiveView() {
-    return this.activeTabId ? this.views.get(this.activeTabId) : null;
+    if (!this.activeTabId) {
+      return null;
+    }
+    return this.views.get(this.activeTabId) || null;
   }
 
   /**

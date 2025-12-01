@@ -128,9 +128,8 @@ connect-src 'self' https:;
 
 Found a security issue? Please report it:
 
-1. **Email**: [security@example.com]
-2. **GitHub Issues**: Use the `security` label
-3. **Include**:
+1. **GitHub Issues**: Use the `security` label
+2. **Include**:
    - Description of the vulnerability
    - Steps to reproduce
    - Potential impact
