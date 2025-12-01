@@ -263,9 +263,6 @@ async function onReady() {
   logger.info('Application starting...');
 
   try {
-    // Register custom protocols before app ready
-    registerProtocols();
-
     // Create the main browser window
     await createMainWindow();
 
@@ -348,6 +345,9 @@ app.on('web-contents-created', (_, contents) => {
     }
   });
 });
+
+// Register custom protocols before app is ready (required by Electron)
+registerProtocols();
 
 // Application lifecycle events
 app.whenReady().then(onReady);
