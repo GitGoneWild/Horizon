@@ -1,144 +1,235 @@
-# 🏛️ Horizon Architecture
+# Horizon Browser - Architecture Overview
 
-## Overview
+This document describes the architecture of Horizon Browser's Flutter implementation.
 
-Horizon is built on **Electron**, providing a cross-platform desktop browser with Chromium rendering and Node.js capabilities. The architecture follows Electron's multi-process model with security as a top priority.
-
-## 🔷 Process Model
+## High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        MAIN PROCESS                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌────────────┐ │
-│  │ Tab Manager │ │  Profiles   │ │  Security   │ │ Credentials│ │
-│  └─────────────┘ └─────────────┘ └─────────────┘ └────────────┘ │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌────────────┐ │
-│  │  Sessions   │ │  Settings   │ │ Extensions  │ │    Menu    │ │
-│  └─────────────┘ └─────────────┘ └─────────────┘ └────────────┘ │
-│                           │ IPC                                  │
-└───────────────────────────┼─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                         UI Layer                             │
+│  ┌──────────┐  ┌──────────────┐  ┌───────────────────────┐  │
+│  │  Widgets │  │   Features   │  │     Pages/Screens     │  │
+│  └──────────┘  └──────────────┘  └───────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
                             │
-┌───────────────────────────┼─────────────────────────────────────┐
-│                     PRELOAD SCRIPT                               │
-│            (Secure bridge via contextBridge)                     │
-│                  window.horizon API                              │
-└───────────────────────────┼─────────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    State Management                          │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                Riverpod Providers                    │    │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ │    │
+│  │  │   Tabs   │ │ Profiles │ │ Settings │ │ Creds  │ │    │
+│  │  └──────────┘ └──────────┘ └──────────┘ └────────┘ │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
                             │
-┌───────────────────────────┼─────────────────────────────────────┐
-│                    RENDERER PROCESS                              │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Browser Chrome                            ││
-│  │  [Tabs] [URL Bar] [Navigation] [Menu] [Profile]             ││
-│  └─────────────────────────────────────────────────────────────┘│
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Web Content                               ││
-│  │              (BrowserView / webContents)                    ││
-│  │                    [Sandboxed]                              ││
-│  └─────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       Core Layer                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │   Models    │  │   Services  │  │      Utilities      │  │
+│  │             │  │             │  │                     │  │
+│  │ • Profile   │  │ • Password  │  │ • URL Validation    │  │
+│  │ • Tab       │  │ • Encryption│  │ • Encryption Helpers│  │
+│  │ • Credential│  │ • URL       │  │ • Constants         │  │
+│  │ • Settings  │  │             │  │                     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Platform Layer                            │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │                    Flutter/Dart                        │  │
+│  │  ┌────────────┐  ┌────────────┐  ┌────────────────┐   │  │
+│  │  │  InAppWeb  │  │   Hive     │  │ Secure Storage │   │  │
+│  │  │    View    │  │  Storage   │  │                │   │  │
+│  │  └────────────┘  └────────────┘  └────────────────┘   │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## 🔐 Security Architecture
-
-### Security Principles
-
-1. **Context Isolation** - Renderer can't access Node.js directly
-2. **Sandbox Mode** - Web content runs in isolated sandbox
-3. **No Node Integration** - `nodeIntegration: false`
-4. **Preload Scripts** - Secure IPC bridge only
-5. **CSP Headers** - Content Security Policy enforcement
-
-### BrowserWindow Security Settings
-
-```javascript
-webPreferences: {
-  nodeIntegration: false,      // ✅ Disabled
-  contextIsolation: true,      // ✅ Enabled
-  sandbox: true,               // ✅ Enabled
-  preload: 'preload.js',       // ✅ Secure bridge
-  webviewTag: true,            // For BrowserViews
-  enableRemoteModule: false,   // ✅ Disabled
-  allowRunningInsecureContent: false  // ✅ Blocked
-}
-```
-
-## 📦 Core Modules
-
-### Main Process Modules
-
-| Module | Purpose | Location |
-|--------|---------|----------|
-| **TabManager** | Tab lifecycle, navigation | `src/main/tabs/` |
-| **ProfileManager** | User profiles, isolation | `src/main/profiles/` |
-| **SessionManager** | Session handling | `src/main/sessions/` |
-| **SecurityManager** | URL validation, policies | `src/main/security/` |
-| **CredentialManager** | Password storage | `src/main/credentials/` |
-| **SettingsManager** | User preferences | `src/main/settings/` |
-| **ExtensionManager** | Chrome extensions | `src/main/extensions/` |
-
-### IPC Communication
-
-All renderer-main communication goes through secure IPC:
-
-```javascript
-// Preload exposes safe API
-contextBridge.exposeInMainWorld('horizon', {
-  tabs: { create, close, navigate, ... },
-  settings: { get, set, ... },
-  security: { isUrlSafe, sanitizeUrl, ... }
-});
-```
-
-## 🗃️ Data Storage
-
-| Data Type | Storage Method | Encryption |
-|-----------|---------------|------------|
-| Settings | electron-store | ❌ |
-| Profiles | electron-store | ❌ |
-| Credentials | electron-store + crypto | ✅ AES-256-GCM |
-| Session Data | Electron Session | Per-profile |
-| Cookies | Electron Cookies | Per-profile |
-
-## 🎨 UI Layer
-
-The renderer uses vanilla JavaScript with:
-- Custom CSS variables for theming
-- Responsive design
-- Accessibility (ARIA) support
-- Keyboard navigation
-
-### Theme System
-
-```css
-:root {
-  --accent-primary: #6366f1;  /* Cosmic indigo */
-  --bg-primary: #ffffff;
-  /* ... */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #0f0f23;
-    /* ... */
-  }
-}
-```
-
-## 🔄 Data Flow
+## Directory Structure
 
 ```
-User Action → Renderer → IPC (horizon API) → Main Process → Handler
-     ↑                                              │
-     └──────────── IPC Response ←───────────────────┘
+lib/
+├── app/                          # Application configuration
+│   ├── providers/                # Riverpod state providers
+│   │   ├── credential_providers.dart
+│   │   ├── profile_providers.dart
+│   │   ├── settings_providers.dart
+│   │   └── tab_providers.dart
+│   ├── routing/                  # Navigation configuration
+│   └── theme/                    # Theme definitions
+│       └── horizon_theme.dart
+│
+├── core/                         # Domain layer
+│   ├── constants/                # Application constants
+│   │   └── app_constants.dart
+│   ├── models/                   # Data models
+│   │   ├── credential.dart
+│   │   ├── profile.dart
+│   │   ├── settings.dart
+│   │   └── tab.dart
+│   ├── services/                 # Business logic services
+│   │   ├── encryption_service.dart
+│   │   ├── password_service.dart
+│   │   └── url_service.dart
+│   └── utils/                    # Utility functions
+│
+├── features/                     # Feature modules
+│   ├── credentials/              # Password management
+│   ├── new_tab/                  # New tab page
+│   │   └── new_tab_page.dart
+│   ├── profiles/                 # Profile management
+│   ├── security/                 # Security features
+│   ├── sessions/                 # Session isolation
+│   ├── settings/                 # Settings UI
+│   └── tabs/                     # Tab management
+│       └── browser_shell.dart
+│
+├── widgets/                      # Reusable UI components
+│   ├── common/                   # Common widgets
+│   ├── navigation/               # Navigation bar
+│   │   └── navigation_bar.dart
+│   └── tabs/                     # Tab bar
+│       └── tab_bar.dart
+│
+└── main.dart                     # Application entry point
 ```
 
-## 📈 Performance Considerations
+## State Management with Riverpod
 
-1. **Lazy Tab Loading** - Tabs load on activation
-2. **Tab Suspension** - Inactive tabs can be suspended
-3. **Hardware Acceleration** - GPU rendering enabled
-4. **Preload Optimization** - Minimal preload scripts
+Horizon uses **Riverpod** for state management due to its:
+- Compile-time safety
+- Dependency injection capabilities
+- Easy testing support
+- Separation of concerns
 
----
+### Provider Types
 
-For more details, see the individual module documentation.
+| Provider | Purpose |
+|----------|---------|
+| `tabsProvider` | Manages open tabs state |
+| `activeTabProvider` | Tracks currently active tab |
+| `profilesProvider` | Manages user profiles |
+| `settingsProvider` | Application settings |
+| `credentialsProvider` | Stored passwords |
+
+### State Flow
+
+```
+User Action → Widget → Ref.read() → Notifier → State Update → UI Rebuild
+```
+
+## Key Design Decisions
+
+### 1. Feature-First Organization
+
+Each feature is self-contained with its own:
+- Widgets
+- Providers
+- Models (if feature-specific)
+- Services (if feature-specific)
+
+### 2. Immutable Models with Equatable
+
+All models extend `Equatable` for:
+- Value equality comparison
+- Immutability enforcement
+- Efficient rebuilds
+
+### 3. Service Layer Pattern
+
+Services handle:
+- Business logic separate from UI
+- External integrations
+- Complex computations
+
+### 4. Repository Pattern
+
+Repositories abstract data storage:
+- `ProfileRepository` - Profile persistence
+- Future: `CredentialRepository`, `SettingsRepository`
+
+## Security Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│              Security Layer                  │
+├─────────────────────────────────────────────┤
+│  URL Validation                             │
+│  • Phishing pattern detection               │
+│  • Dangerous scheme blocking                │
+│  • TLD validation                           │
+├─────────────────────────────────────────────┤
+│  Credential Security                        │
+│  • AES-256-GCM encryption                   │
+│  • Secure key derivation                    │
+│  • Platform keychain integration            │
+├─────────────────────────────────────────────┤
+│  Password Generation                        │
+│  • Cryptographically secure random          │
+│  • Rejection sampling for unbiased output   │
+│  • Configurable character sets              │
+└─────────────────────────────────────────────┘
+```
+
+## WebView Integration
+
+Horizon uses `flutter_inappwebview` for:
+- Multi-tab support with isolated sessions
+- Custom user agent configuration
+- Ad/tracker blocking via request interception
+- Incognito mode without persistence
+
+### Tab Lifecycle
+
+```
+Create Tab → Load URL → Navigate → Update State → Close Tab
+     │                      │
+     ▼                      ▼
+Session Created      Progress Events
+(from Profile)       (loading, error, etc.)
+```
+
+## Theming System
+
+```dart
+// Cosmic color palette
+HorizonColors.cosmicStart   // #6366F1
+HorizonColors.cosmicMid     // #8B5CF6  
+HorizonColors.cosmicEnd     // #A855F7
+
+// Theme access
+Theme.of(context).colorScheme
+context.bgColors    // Background colors
+context.textColors  // Text colors
+```
+
+## Testing Strategy
+
+| Layer | Testing Approach |
+|-------|------------------|
+| Models | Unit tests for serialization, equality |
+| Services | Unit tests for business logic |
+| Providers | Unit tests with mocked dependencies |
+| Widgets | Widget tests for UI behavior |
+| Features | Integration tests for user flows |
+
+## Future Considerations
+
+### Planned Improvements
+
+1. **WebView Implementation** - Full integration with flutter_inappwebview
+2. **Hive Storage** - Persistent local storage
+3. **Extension Support** - Plugin architecture
+4. **Sync Feature** - Cross-device synchronization
+
+### Scalability
+
+The architecture supports:
+- Adding new features as isolated modules
+- Swapping implementations (e.g., storage backends)
+- Platform-specific customization
+- Theming extensions

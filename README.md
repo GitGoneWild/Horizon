@@ -1,17 +1,14 @@
-# 🌌 Horizon Browser
+# 🌌 Horizon Browser - Flutter Edition
 
 <div align="center">
 
-![Horizon Logo](assets/icons/icon.svg)
-
 ### **Explore Beyond Limits** 🚀
 
-*A futuristic, secure, and privacy-focused web browser built with Electron*
+*A futuristic, secure, and privacy-focused web browser built with Flutter*
 
-[![CI/CD](https://github.com/GitGoneWild/Horizon/actions/workflows/ci.yml/badge.svg)](https://github.com/GitGoneWild/Horizon/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Electron](https://img.shields.io/badge/Electron-28.0.0-9FEAF9.svg?logo=electron)](https://www.electronjs.org/)
-[![Version](https://img.shields.io/badge/version-0.1.0-purple.svg)](package.json)
+[![Flutter](https://img.shields.io/badge/Flutter-3.24+-02569B.svg?logo=flutter)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-3.2+-0175C2.svg?logo=dart)](https://dart.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../LICENSE)
 
 **Fast** ⚡ • **Secure** 🔒 • **Private** 👁️
 
@@ -22,7 +19,7 @@
 ## ✨ Features
 
 ### 🌐 Core Browsing
-- **Chromium Engine** - Modern web standards support via Electron
+- **WebView Integration** - Modern web standards support via flutter_inappwebview
 - **Tabbed Browsing** - Efficient tab management with visual indicators
 - **Smart URL Bar** - Search or navigate with intelligent URL detection
 - **Keyboard Shortcuts** - Full keyboard navigation support
@@ -33,8 +30,6 @@
 - **HTTPS Enforcement** - Prefer secure connections
 - **Fingerprinting Protection** - Reduce browser fingerprinting
 - **Incognito Mode** - Private browsing with no data persistence
-- **Context Isolation** - Secure renderer process isolation
-- **Sandbox Mode** - Web content runs in sandboxed environment
 
 ### 👤 Multi-Profile Support
 - **Isolated Sessions** - Separate cookies, storage, and history per profile
@@ -45,12 +40,10 @@
 - **Secure Storage** - AES-256-GCM encrypted password storage
 - **Password Generator** - Create strong, random passwords
 - **Strength Assessment** - Real-time password strength feedback
-- **Autofill Support** - Quick credential filling
 
 ### 🎨 Customization
 - **Dark/Light/System Themes** - Automatic theme switching with cosmic colors
 - **Customizable New Tab** - Quick links and search
-- **Extension Support** - Chrome extension compatibility
 - **Settings Page** - Comprehensive configuration options
 
 ### ⚡ Performance
@@ -62,128 +55,150 @@
 
 ## 📦 Installation
 
-### 📥 From Release (Recommended)
-Download the latest release for your platform:
-- **Windows**: `Horizon-Setup.exe`
-- **macOS**: `Horizon.dmg`
-- **Linux**: `Horizon.AppImage` or `.deb`
+### Prerequisites
 
-### 🔧 From Source
+- **Flutter SDK** 3.24.0 or later
+- **Dart SDK** 3.2.0 or later
+- Platform-specific requirements:
+  - **Windows**: Visual Studio 2022 with C++ desktop development
+  - **macOS**: Xcode 15+ with command line tools
+  - **Linux**: GTK3 development libraries
+
+### Getting Started
 
 ```bash
-# Clone the repository
-git clone https://github.com/GitGoneWild/Horizon.git
-cd Horizon
+# Navigate to the Flutter project
+cd horizon_flutter
 
 # Install dependencies
-npm install
+flutter pub get
 
-# Start the browser
-npm start
-
-# Or in development mode
-npm run dev
+# Run the app in development mode
+flutter run -d linux   # For Linux
+flutter run -d macos   # For macOS
+flutter run -d windows # For Windows
 ```
+
+### Building for Production
+
+```bash
+# Build for Linux
+flutter build linux --release
+
+# Build for macOS
+flutter build macos --release
+
+# Build for Windows
+flutter build windows --release
+```
+
+Build artifacts will be in `build/<platform>/`.
 
 ---
 
 ## 🛠️ Development
 
-### Prerequisites
-- Node.js 18+
-- npm 9+
-- Git
-
 ### 📁 Project Structure
 
 ```
-horizon/
-├── src/
-│   ├── main/           # Main process (Electron)
-│   │   ├── main.js     # Entry point
-│   │   ├── profiles/   # Profile management
-│   │   ├── sessions/   # Session isolation
-│   │   ├── tabs/       # Tab management
-│   │   ├── security/   # Security policies
-│   │   ├── credentials/# Password management
-│   │   ├── extensions/ # Extension support
-│   │   ├── settings/   # User preferences
-│   │   ├── menu/       # Application menu
-│   │   ├── ipc/        # IPC handlers
-│   │   └── utils/      # Utilities
-│   ├── preload/        # Preload scripts
-│   └── renderer/       # Browser UI
-│       ├── index.html  # Main HTML
-│       ├── styles/     # CSS styles
-│       └── scripts/    # UI logic
-├── tests/
-│   ├── unit/           # Unit tests
-│   └── e2e/            # End-to-end tests
-├── docs/               # Documentation
-├── assets/             # Icons and images
-└── scripts/            # Build scripts
+horizon_flutter/
+├── lib/
+│   ├── app/                    # App root, routing, DI, themes
+│   │   ├── providers/          # Riverpod providers
+│   │   ├── routing/            # Navigation/routing
+│   │   └── theme/              # Theme definitions
+│   ├── core/                   # Shared domain logic
+│   │   ├── constants/          # App constants
+│   │   ├── models/             # Data models
+│   │   ├── services/           # Core services
+│   │   └── utils/              # Utilities
+│   ├── features/               # Feature modules
+│   │   ├── tabs/               # Tab management
+│   │   ├── profiles/           # Profile management
+│   │   ├── sessions/           # Session isolation
+│   │   ├── security/           # Security features
+│   │   ├── credentials/        # Password management
+│   │   ├── settings/           # Settings management
+│   │   └── new_tab/            # New tab page
+│   ├── widgets/                # Shared UI components
+│   │   ├── common/             # Common widgets
+│   │   ├── navigation/         # Navigation widgets
+│   │   └── tabs/               # Tab-related widgets
+│   └── main.dart               # Entry point
+├── assets/                     # Icons, images
+├── test/                       # Unit tests
+├── integration_test/           # E2E tests
+└── docs/                       # Documentation
 ```
+
+### 🏗️ Architecture
+
+Horizon Flutter follows a **feature-first architecture** with:
+
+- **Riverpod** for state management and dependency injection
+- **Clean separation** between UI, business logic, and data layers
+- **SOLID principles** for maintainable code
+- **Immutable models** using Equatable
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed documentation.
 
 ### 🚀 Scripts
 
 ```bash
 # Development
-npm start           # Start the browser
-npm run dev         # Start in development mode
+flutter run                    # Run in debug mode
+flutter run --release          # Run in release mode
 
 # Testing
-npm test            # Run unit tests with coverage
-npm run test:watch  # Run tests in watch mode
-npm run test:e2e    # Run end-to-end tests
+flutter test                   # Run unit tests
+flutter test --coverage        # Run tests with coverage
 
-# Linting
-npm run lint        # Run ESLint
-npm run lint:fix    # Fix linting issues
+# Code Quality
+flutter analyze                # Static analysis
+dart format .                  # Format code
 
-# Building
-npm run build       # Build for production
-npm run package     # Package without installer
-npm run package:win # Build Windows installer
-npm run package:mac # Build macOS installer
-npm run package:linux # Build Linux packages
+# Code Generation
+flutter pub run build_runner build  # Generate code
 ```
 
 ---
 
 ## 🔒 Security
 
-Horizon is built with security as a top priority:
+Security is a top priority:
 
 | Feature | Description |
 |---------|-------------|
-| 🔐 Context Isolation | Renderer processes isolated from Node.js |
-| 📦 Sandbox Mode | Web content runs in sandboxed environment |
-| 🛡️ CSP Headers | Strict Content Security Policy |
-| ⛔ No Remote Module | Remote module is disabled |
-| 🔄 Regular Updates | Dependabot monitors dependency updates |
-| 🔍 Security Audit | Regular npm audit checks |
-
-### 🐛 Reporting Vulnerabilities
-
-Please report security vulnerabilities to the repository issues with the `security` label.
+| 🔐 Encrypted Storage | AES-256-GCM for credentials |
+| 🛡️ URL Validation | Protection against phishing |
+| ⛔ XSS Prevention | JavaScript URL blocking |
+| 🔄 Secure Random | Cryptographic password generation |
 
 ---
 
 ## 🧪 Testing
 
-### Unit Tests
+### Running Tests
+
 ```bash
-npm test
+# Run all tests
+flutter test
+
+# Run with coverage
+flutter test --coverage
+
+# Run specific test file
+flutter test test/password_service_test.dart
 ```
 
-Tests cover:
-- Profile management
-- Security manager (URL validation, policies)
-- Credential manager (encryption, storage)
-- Settings manager (persistence, defaults)
+### Test Coverage
 
-### Coverage Target
-**80%+ code coverage** on core modules.
+Tests cover:
+- Password generation and strength assessment
+- URL validation and sanitization
+- Profile model serialization
+- Settings model validation
+- Security logic
 
 ---
 
@@ -195,23 +210,15 @@ Tests cover:
 | Close Tab | `Ctrl+W` | `Cmd+W` |
 | New Incognito Tab | `Ctrl+Shift+N` | `Cmd+Shift+N` |
 | Focus URL Bar | `Ctrl+L` | `Cmd+L` |
-| Refresh | `Ctrl+R` / `F5` | `Cmd+R` |
+| Refresh | `Ctrl+R` | `Cmd+R` |
 | Back | `Alt+Left` | `Cmd+Left` |
 | Forward | `Alt+Right` | `Cmd+Right` |
-| Developer Tools | `Ctrl+Shift+I` | `Cmd+Shift+I` |
-| Settings | `Ctrl+,` | `Cmd+,` |
-| History | `Ctrl+H` | `Cmd+H` |
-| Bookmarks | `Ctrl+Shift+B` | `Cmd+Shift+B` |
-| Zoom In | `Ctrl++` | `Cmd++` |
-| Zoom Out | `Ctrl+-` | `Cmd+-` |
-| Reset Zoom | `Ctrl+0` | `Cmd+0` |
-| Find in Page | `Ctrl+F` | `Cmd+F` |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! 
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -223,16 +230,7 @@ Contributions are welcome!
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [Electron](https://www.electronjs.org/) - Cross-platform desktop framework
-- [uBlock Origin](https://github.com/gorhill/uBlock) - Ad blocking
-- [Dark Reader](https://darkreader.org/) - Dark mode extension
-- All open-source contributors
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 ---
 
@@ -240,6 +238,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 🌌 **Horizon** - *Explore Beyond Limits*
 
-Made with ❤️ by the Horizon Team
+Made with ❤️ and Flutter
 
 </div>

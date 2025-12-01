@@ -1,53 +1,45 @@
-# UltraBrowse - Dependencies & Build Artifacts
-
-# Dependencies
-node_modules/
-
-# Build outputs
-dist/
-out/
-build/
-*.exe
-*.dmg
-*.AppImage
-*.deb
-*.rpm
-
-# Coverage reports
-coverage/
-.nyc_output/
-
-# IDE & Editor
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
-
-# Logs
+# Miscellaneous
+*.class
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-# Environment files
-.env
-.env.local
-.env.*.local
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
 
-# Electron
-.electron/
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-# Temporary files
-tmp/
-temp/
-*.tmp
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
 
-# Package lock (optional - can keep if needed)
-# package-lock.json
+# Symbolication related
+app.*.symbols
 
-# Test artifacts
-test-results/
-playwright-report/
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
