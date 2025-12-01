@@ -60,9 +60,38 @@
 - **Flutter SDK** 3.24.0 or later
 - **Dart SDK** 3.2.0 or later
 - Platform-specific requirements:
-  - **Windows**: Visual Studio 2022 with C++ desktop development
+  - **Windows**: Visual Studio 2022 with C++ desktop development, and [NuGet](https://www.nuget.org/downloads) (required for WebView2 plugin)
   - **macOS**: Xcode 15+ with command line tools
   - **Linux**: GTK3 development libraries
+
+### Windows Setup
+
+The `flutter_inappwebview` plugin requires NuGet to download its dependencies on Windows. Follow these steps:
+
+1. **Install NuGet** (choose one method):
+   
+   **Option A: Using winget (Recommended)**
+   ```powershell
+   winget install Microsoft.NuGet
+   ```
+   
+   **Option B: Manual installation**
+   - Download `nuget.exe` from https://www.nuget.org/downloads
+   - Place it in `C:\Windows\System32` or add its location to your PATH
+
+2. **Restart your terminal/IDE** after installing NuGet
+
+3. **Verify installation**:
+   ```powershell
+   nuget help
+   ```
+
+If you still encounter build errors after installing NuGet, try:
+```bash
+flutter clean
+flutter pub get
+flutter run -d windows
+```
 
 ### Getting Started
 
