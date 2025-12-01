@@ -10,6 +10,27 @@ Thank you for your interest in contributing to Horizon Browser! This document pr
 2. **Dart SDK** 3.2.0+
 3. An IDE with Flutter support (VS Code or Android Studio recommended)
 4. Git
+5. Platform-specific requirements:
+   - **Windows**: Visual Studio 2022 with C++ desktop development, and [NuGet](https://www.nuget.org/downloads)
+   - **macOS**: Xcode 15+ with command line tools
+   - **Linux**: GTK3 development libraries
+
+### Windows-Specific Setup
+
+The project uses `flutter_inappwebview` which requires NuGet on Windows to download WebView2 dependencies:
+
+```powershell
+# Install NuGet using winget (recommended)
+winget install Microsoft.NuGet
+
+# Or download nuget.exe from https://www.nuget.org/downloads
+# and add it to your PATH
+
+# Verify installation
+nuget help
+```
+
+**Important**: Restart your terminal/IDE after installing NuGet.
 
 ### Setup
 
