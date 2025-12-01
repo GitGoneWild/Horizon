@@ -17,14 +17,24 @@ Thank you for your interest in contributing to Horizon Browser! This document pr
 
 ### Windows-Specific Setup
 
-The project uses `flutter_inappwebview` which requires NuGet on Windows to download WebView2 dependencies:
+The project uses `flutter_inappwebview` which requires NuGet on Windows to download WebView2 dependencies.
+
+**Quick Setup (Recommended):**
 
 ```powershell
-# Install NuGet using winget (recommended)
+# Run the automated setup script from the repository root
+.\scripts\setup-windows.ps1
+```
+
+**Manual Setup:**
+
+```powershell
+# Install NuGet using winget
 winget install Microsoft.NuGet
 
-# Or download nuget.exe from https://www.nuget.org/downloads
-# and add it to your PATH
+# Or download and install manually
+Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "$env:LOCALAPPDATA\NuGet\nuget.exe"
+[Environment]::SetEnvironmentVariable("Path", "$env:Path;$env:LOCALAPPDATA\NuGet", [EnvironmentVariableTarget]::User)
 
 # Verify installation
 nuget help

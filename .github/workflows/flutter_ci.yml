@@ -109,6 +109,34 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Install NuGet
+        run: |
+          # Create dedicated tools directory for NuGet
+          $toolsDir = "$env:USERPROFILE\.nuget"
+          if (-not (Test-Path $toolsDir)) {
+            New-Item -ItemType Directory -Path $toolsDir -Force | Out-Null
+          }
+          
+          # Download NuGet CLI with TLS 1.2 enforcement
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $nugetPath = "$toolsDir\nuget.exe"
+          Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetPath -UseBasicParsing
+          
+          # Verify the download is a valid executable
+          # NuGet.exe is typically 6-7MB; 1KB minimum detects empty files or error pages
+          $fileInfo = Get-Item $nugetPath
+          $minFileSizeBytes = 1024  # 1 KB minimum
+          if ($fileInfo.Length -lt $minFileSizeBytes) {
+            throw "NuGet download appears incomplete (size: $($fileInfo.Length) bytes)"
+          }
+          
+          # Add to PATH for this session
+          echo $toolsDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          
+          # Verify installation
+          & $nugetPath help | Select-Object -First 3
+        shell: pwsh
+
       - name: Get dependencies
         run: flutter pub get
 

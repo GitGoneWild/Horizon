@@ -66,18 +66,39 @@
 
 ### Windows Setup
 
-The `flutter_inappwebview` plugin requires NuGet to download its dependencies on Windows. Follow these steps:
+The `flutter_inappwebview` plugin requires NuGet to download its Windows dependencies (WebView2, etc.).
 
-1. **Install NuGet** (choose one method):
+#### Quick Setup (Recommended)
+
+Run the automated setup script in PowerShell:
+
+```powershell
+# From the repository root
+.\scripts\setup-windows.ps1
+```
+
+This script will:
+- Install NuGet CLI and add it to your PATH
+- Verify WebView2 Runtime availability
+- Provide next-step instructions
+
+#### Manual Setup
+
+If you prefer manual installation:
+
+1. **Install NuGet CLI** (choose one method):
    
-   **Option A: Using winget (Recommended)**
+   **Option A: Using winget**
    ```powershell
    winget install Microsoft.NuGet
    ```
    
-   **Option B: Manual installation**
-   - Download `nuget.exe` from https://www.nuget.org/downloads
-   - Place it in `C:\Windows\System32` or add its location to your PATH
+   **Option B: Direct download**
+   ```powershell
+   # Download to user directory and add to PATH
+   Invoke-WebRequest -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "$env:LOCALAPPDATA\NuGet\nuget.exe"
+   [Environment]::SetEnvironmentVariable("Path", "$env:Path;$env:LOCALAPPDATA\NuGet", [EnvironmentVariableTarget]::User)
+   ```
 
 2. **Restart your terminal/IDE** after installing NuGet
 
@@ -86,11 +107,24 @@ The `flutter_inappwebview` plugin requires NuGet to download its dependencies on
    nuget help
    ```
 
-If you still encounter build errors after installing NuGet, try:
-```bash
+#### Troubleshooting
+
+If you encounter `NUGET-NOTFOUND` or error code 9009:
+
+```powershell
+# Clean and rebuild
 flutter clean
 flutter pub get
 flutter run -d windows
+```
+
+If NuGet is installed but not found, ensure it's in your PATH:
+```powershell
+# Check if NuGet is accessible
+Get-Command nuget
+
+# If not found, add to current session manually
+$env:Path += ";$env:LOCALAPPDATA\NuGet"
 ```
 
 ### Getting Started
