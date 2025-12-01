@@ -1,5 +1,5 @@
 /**
- * @file Webview Preload script for UltraBrowse browser
+ * @file Webview Preload script for Horizon browser
  * @description Minimal preload for webview content with security restrictions
  * @module preload/webview-preload
  */
@@ -51,5 +51,5 @@ WebGLRenderingContext.prototype.getParameter = function(parameter) {
 
 // Log page load for debugging (in development only)
 if (process.env.NODE_ENV === 'development') {
-  console.log('[UltraBrowse] Page loaded:', window.location.href);
+  console.log('[Horizon] Page loaded:', window.location.href);
 }

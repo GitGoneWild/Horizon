@@ -1,5 +1,5 @@
 /**
- * @file Credential Manager for UltraBrowse browser
+ * @file Credential Manager for Horizon browser
  * @description Handles secure storage and autofill of user credentials
  * Uses system keychain for maximum security
  * @module credentials/credentialManager
@@ -75,11 +75,11 @@ class CredentialManager {
       process.env.USER,
       process.env.USERNAME,
       process.pid.toString()
-    ].filter(Boolean).join('-') || 'ultrabrowse-default';
+    ].filter(Boolean).join('-') || 'horizon-default';
 
     // Use a cryptographically secure derivation
     return crypto.createHash('sha256')
-      .update(machineId + '-ultrabrowse-credential-key-v1')
+      .update(machineId + '-horizon-credential-key-v1')
       .digest('hex');
   }
 

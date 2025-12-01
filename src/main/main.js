@@ -1,5 +1,5 @@
 /**
- * @file Main Electron process for UltraBrowse browser
+ * @file Main Electron process for Horizon browser
  * @description Entry point for the browser application, handles window management,
  * IPC communication, security policies, and core browser functionality
  * @module main
@@ -61,11 +61,11 @@ const APP_CONFIG = {
   /** Default window height in pixels */
   DEFAULT_HEIGHT: 800,
   /** Default homepage URL */
-  DEFAULT_HOMEPAGE: 'ultrabrowse://newtab',
+  DEFAULT_HOMEPAGE: 'horizon://newtab',
   /** Default search engine */
   DEFAULT_SEARCH_ENGINE: 'https://duckduckgo.com/?q=',
   /** Application protocol */
-  PROTOCOL: 'ultrabrowse'
+  PROTOCOL: 'horizon'
 };
 
 /**
@@ -92,7 +92,7 @@ async function createMainWindow() {
     minHeight: APP_CONFIG.MIN_HEIGHT,
     x: windowState.x,
     y: windowState.y,
-    title: 'UltraBrowse',
+    title: 'Horizon',
     icon: path.join(__dirname, '../../assets/icons/icon.png'),
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     show: false,
@@ -118,7 +118,7 @@ async function createMainWindow() {
 
   // Security: Disable navigation to external protocols
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ultrabrowse://')) {
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('horizon://')) {
       return { action: 'allow' };
     }
     logger.warn(`Blocked window open: ${url}`);
@@ -207,7 +207,7 @@ function setupSecurityPolicy() {
       responseHeaders: {
         ...details.responseHeaders,
         'Content-Security-Policy': [
-          "default-src 'self' ultrabrowse:;",
+          "default-src 'self' horizon:;",
           "script-src 'self' 'unsafe-inline';",
           "style-src 'self' 'unsafe-inline';",
           "img-src 'self' data: https:;",

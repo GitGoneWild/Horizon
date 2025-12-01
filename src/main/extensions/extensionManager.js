@@ -1,5 +1,5 @@
 /**
- * @file Extension Manager for UltraBrowse browser
+ * @file Extension Manager for Horizon browser
  * @description Handles Chrome extension installation, loading, and management
  * @module extensions/extensionManager
  */

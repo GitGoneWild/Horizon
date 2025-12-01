@@ -1,5 +1,5 @@
 /**
- * @file Preload script for UltraBrowse browser chrome
+ * @file Preload script for Horizon browser chrome
  * @description Exposes secure IPC API to renderer process via contextBridge
  * @module preload/preload
  */
@@ -12,7 +12,7 @@ const { contextBridge, ipcRenderer } = require('electron');
  * Secure API exposed to renderer process
  * All IPC calls are wrapped for security
  */
-contextBridge.exposeInMainWorld('ultraBrowse', {
+contextBridge.exposeInMainWorld('horizon', {
   // ===== Tab Management =====
   tabs: {
     /**
@@ -78,6 +78,58 @@ contextBridge.exposeInMainWorld('ultraBrowse', {
      * @returns {Promise<boolean>} Success status
      */
     stop: () => ipcRenderer.invoke('tab:stop'),
+
+    /**
+     * Zoom in
+     * @returns {Promise<boolean>} Success status
+     */
+    zoomIn: () => ipcRenderer.invoke('tab:zoomIn'),
+
+    /**
+     * Zoom out
+     * @returns {Promise<boolean>} Success status
+     */
+    zoomOut: () => ipcRenderer.invoke('tab:zoomOut'),
+
+    /**
+     * Reset zoom level
+     * @returns {Promise<boolean>} Success status
+     */
+    zoomReset: () => ipcRenderer.invoke('tab:zoomReset'),
+
+    /**
+     * Get current zoom level
+     * @returns {Promise<number>} Zoom level
+     */
+    getZoomLevel: () => ipcRenderer.invoke('tab:getZoomLevel'),
+
+    /**
+     * Find text in page
+     * @param {string} text - Text to find
+     * @param {Object} [options] - Find options
+     * @returns {Promise<Object|null>} Find result
+     */
+    findInPage: (text, options) => ipcRenderer.invoke('tab:findInPage', text, options),
+
+    /**
+     * Stop find in page
+     * @param {string} [action='clearSelection'] - Action to perform
+     * @returns {Promise<boolean>} Success status
+     */
+    stopFindInPage: (action) => ipcRenderer.invoke('tab:stopFindInPage', action),
+
+    /**
+     * Print current page
+     * @param {Object} [options] - Print options
+     * @returns {Promise<boolean>} Success status
+     */
+    print: (options) => ipcRenderer.invoke('tab:print', options),
+
+    /**
+     * Toggle developer tools
+     * @returns {Promise<boolean>} Success status
+     */
+    toggleDevTools: () => ipcRenderer.invoke('tab:toggleDevTools'),
 
     /**
      * Listens for tab updates

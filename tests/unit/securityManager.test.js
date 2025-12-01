@@ -48,8 +48,8 @@ describe('SecurityManager', () => {
     });
 
     test('should return true for internal URLs', () => {
-      expect(securityManager.isUrlSafe('ultrabrowse://newtab')).toBe(true);
-      expect(securityManager.isUrlSafe('ultrabrowse://settings')).toBe(true);
+      expect(securityManager.isUrlSafe('horizon://newtab')).toBe(true);
+      expect(securityManager.isUrlSafe('horizon://settings')).toBe(true);
     });
 
     test('should return true for devtools URLs', () => {

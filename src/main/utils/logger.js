@@ -1,5 +1,5 @@
 /**
- * @file Logger utility for UltraBrowse browser
+ * @file Logger utility for Horizon browser
  * @description Provides structured logging with levels and timestamps
  * @module utils/logger
  */

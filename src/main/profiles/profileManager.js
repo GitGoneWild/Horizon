@@ -1,5 +1,5 @@
 /**
- * @file Profile Manager for UltraBrowse browser
+ * @file Profile Manager for Horizon browser
  * @description Handles creation, deletion, and management of user profiles
  * with isolated storage for cookies, localStorage, and session data
  * @module profiles/profileManager

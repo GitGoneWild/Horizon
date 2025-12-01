@@ -1,5 +1,5 @@
 /**
- * @file IPC Handlers for UltraBrowse browser
+ * @file IPC Handlers for Horizon browser
  * @description Sets up Inter-Process Communication handlers for renderer-main communication
  * @module ipc/ipcHandlers
  */
@@ -408,6 +408,132 @@ function setupIpcHandlers(ipcMain, managers) {
       return {};
     }
     return securityManager.getSettings();
+  });
+
+  // ===== Advanced Browsing Features =====
+
+  /**
+   * Zoom in current tab
+   */
+  ipcMain.handle('tab:zoomIn', async () => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      const currentZoom = view.webContents.getZoomLevel();
+      view.webContents.setZoomLevel(Math.min(currentZoom + 0.5, 5));
+      return true;
+    }
+    return false;
+  });
+
+  /**
+   * Zoom out current tab
+   */
+  ipcMain.handle('tab:zoomOut', async () => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      const currentZoom = view.webContents.getZoomLevel();
+      view.webContents.setZoomLevel(Math.max(currentZoom - 0.5, -3));
+      return true;
+    }
+    return false;
+  });
+
+  /**
+   * Reset zoom level
+   */
+  ipcMain.handle('tab:zoomReset', async () => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      view.webContents.setZoomLevel(0);
+      return true;
+    }
+    return false;
+  });
+
+  /**
+   * Get current zoom level
+   */
+  ipcMain.handle('tab:getZoomLevel', async () => {
+    if (!tabManager) {
+      return 0;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      return view.webContents.getZoomLevel();
+    }
+    return 0;
+  });
+
+  /**
+   * Find in page
+   */
+  ipcMain.handle('tab:findInPage', async (_, text, options = {}) => {
+    if (!tabManager || !text) {
+      return null;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      return view.webContents.findInPage(text, options);
+    }
+    return null;
+  });
+
+  /**
+   * Stop find in page
+   */
+  ipcMain.handle('tab:stopFindInPage', async (_, action = 'clearSelection') => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      view.webContents.stopFindInPage(action);
+      return true;
+    }
+    return false;
+  });
+
+  /**
+   * Print current page
+   */
+  ipcMain.handle('tab:print', async (_, options = {}) => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      view.webContents.print(options);
+      return true;
+    }
+    return false;
+  });
+
+  /**
+   * Toggle developer tools
+   */
+  ipcMain.handle('tab:toggleDevTools', async () => {
+    if (!tabManager) {
+      return false;
+    }
+    const view = tabManager.getActiveView();
+    if (view && view.webContents) {
+      if (view.webContents.isDevToolsOpened()) {
+        view.webContents.closeDevTools();
+      } else {
+        view.webContents.openDevTools();
+      }
+      return true;
+    }
+    return false;
   });
 
   // ===== Window/App Management =====
