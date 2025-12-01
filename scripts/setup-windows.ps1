@@ -151,6 +151,23 @@ Write-Host "`n========================================" -ForegroundColor Magenta
 Write-Host "  Horizon Browser - Windows Setup" -ForegroundColor Magenta
 Write-Host "========================================`n" -ForegroundColor Magenta
 
+# Check for Visual Studio with C++ tools
+Write-Step "Checking Visual Studio installation..."
+$vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+if (Test-Path $vsWhere) {
+    $vsInstall = & $vsWhere -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property displayName 2>$null
+    if ($vsInstall) {
+        Write-Success "Visual Studio with C++ tools found: $vsInstall"
+    } else {
+        Write-Warning "Visual Studio found but C++ desktop development tools may be missing"
+        Write-Host "  Install 'Desktop development with C++' workload via Visual Studio Installer"
+    }
+} else {
+    Write-Warning "Visual Studio not detected"
+    Write-Host "  Please install Visual Studio 2022 with 'Desktop development with C++' workload"
+    Write-Host "  Download: https://visualstudio.microsoft.com/downloads/"
+}
+
 # Check for Flutter
 Write-Step "Checking Flutter installation..."
 if (Test-FlutterInstalled) {
@@ -213,4 +230,6 @@ Write-Host "  2. Run 'flutter pub get' to fetch dependencies" -ForegroundColor G
 Write-Host "  3. Run 'flutter run -d windows' to start the app" -ForegroundColor Gray
 Write-Host "`nIf you encounter issues, try:" -ForegroundColor White
 Write-Host "  flutter clean && flutter pub get && flutter run -d windows" -ForegroundColor Gray
+Write-Host "`nFor more troubleshooting help, see:" -ForegroundColor White
+Write-Host "  docs/TROUBLESHOOTING.md" -ForegroundColor Cyan
 Write-Host ""

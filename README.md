@@ -109,10 +109,13 @@ If you prefer manual installation:
 
 #### Troubleshooting
 
-If you encounter `NUGET-NOTFOUND` or error code 9009:
+> **⚠️ Getting `NUGET-NOTFOUND` or MSB3073 errors?**
+> See our detailed [Troubleshooting Guide](docs/TROUBLESHOOTING.md) for step-by-step solutions.
 
+Quick fix:
 ```powershell
-# Clean and rebuild
+# Ensure NuGet is in PATH, then clean and rebuild
+Get-Command nuget  # Should show nuget.exe path
 flutter clean
 flutter pub get
 flutter run -d windows
@@ -120,10 +123,7 @@ flutter run -d windows
 
 If NuGet is installed but not found, ensure it's in your PATH:
 ```powershell
-# Check if NuGet is accessible
-Get-Command nuget
-
-# If not found, add to current session manually
+# Add NuGet to current session manually
 $env:Path += ";$env:LOCALAPPDATA\NuGet"
 ```
 
