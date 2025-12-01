@@ -72,8 +72,3 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-
-  fonts:
-    - family: HorizonIcons
-      fonts:
-        - asset: assets/fonts/HorizonIcons.ttf
