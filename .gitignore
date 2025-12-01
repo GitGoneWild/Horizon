@@ -1,0 +1,53 @@
+# UltraBrowse - Dependencies & Build Artifacts
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+out/
+build/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# IDE & Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Electron
+.electron/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package lock (optional - can keep if needed)
+# package-lock.json
+
+# Test artifacts
+test-results/
+playwright-report/
